@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<style>
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		body,html{
+			height: 100%;
+		}
+		#top-bar{
+			width: 100%;
+			height: 150px;
+			background-color: #F9026B;
+		}
+		#left-bar{
+			width: 20%;
+			height: 100%;
+			float: left;
+			background-color:#8D917D;
+		}
+		#content{
+			width: 80%;
+			height: 100%;
+			float: left;
+			background-color:#aaa;
+						text-align:center;
+		}
+	</style>
+	<script>
+	$(function() {
+		var link = $("#ad");
+		$("#btn_save").click(function(){
+			// console.log($("#text").val()+","+$("#text").html()+","+$("#text").text());
+			var blob = new Blob(["<h1>"+$("#text").val()+"</h1>"],{type:"application/octect-stream"});
+			var bloburl = URL.createObjectURL(blob);
+			var filename = "save.txt";
+			link.attr({href:bloburl,download:filename}).text(filename);
+		});
+		$("#btn_read").change(function(e){
+			var file = e.target.files[0];
+			console.log(file);
+
+			var url = URL.createObjectURL(file);
+			var tt = $("#text").val()+"<img src='"+url+"' style='width:600px; padding:5px 0px'>";
+			$("#text").val(tt);
+			$("#add").append("<img src='"+url+"' style='width:600px; padding:5px 0px'>");
+		});
+		$(".list-content").click(function(){
+			var th = $(this);
+			var dir = th.parent("ol").attr("id");
+			var page = th.attr("id");
+			var path = dir+"/"+page+".html";
+			console.log(path);
+			$.ajax({url:path,
+					type:"get",
+					dataType:"html",
+			}).done(function(data){
+				$("#content").html(data);
+			});
+		});
+
+	});
+	</script>
+	
+</head>
+<body>
+	<div id="top-bar"><h1>MyPages</h1></div>
+	<div id="left-bar">
+		<ul>
+			<li class="list-dir">Home-Page
+				<ol id="Home-Page">
+					<li class="list-content" id="Edit">Edit</li>
+				</ol>
+			</li>
+			<li class="list-dir">Daily
+				<ol id="Daily">
+					<li class="list-content" id="4月">4月</li>
+					<li class="list-content" id="5月">5月</li>
+				</ol>
+			</li>
+		</ul>
+
+	</div>
+	<div id="content">
+		<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
+		<br>
+		<input id="btn_read" type="file" accept="image/*" value="read">
+		<input id="btn_save" type="button" value="save">
+		<br>
+		<a id="ad"></a>	
+		<div id="add" style="width:620px;"></div>
+	</div>
+</body>
+</html>
