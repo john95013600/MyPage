@@ -4,11 +4,11 @@ header('Content-type: text/html; charset=utf-8');
 function listdir($dir='.') {
     if (!is_dir($dir))  return false;
     echo '<ul class="left-list">';
-    listdiraux($dir);
+    listdiraux($dir,$dir);
     echo '</ul>';
 }
 
-function listdiraux($dir) {
+function listdiraux($dir,$path) {
     $handle = opendir($dir);
     while (($file = readdir($handle)) !== false) {
         if ($file == '.' || $file == '..')  continue;
@@ -18,7 +18,7 @@ function listdiraux($dir) {
             //chmod($filepath, 0777);
             // $s =split('.',$file);
             $name=iconv("BIG5", "UTF-8",$file);
-            $s = split('\.', $name);
+            $s = split('\.html', $name);
             echo '<li class="list-content" id="'.$name.'">'.$s[0].'</li>';
         }
         else if (is_dir($filepath)) {
@@ -26,8 +26,8 @@ function listdiraux($dir) {
 
             $name=iconv("BIG5", "UTF-8",$file);
             echo '<li class="list-dir">'.$name;
-            echo '<ol id="'.$name.'">';
-            listdiraux($filepath);
+            echo '<ol id="'.$path."/".$name.'">';
+            listdiraux($filepath,$path."/".$name);
             echo '</ol>';
             echo '</li>';
         }

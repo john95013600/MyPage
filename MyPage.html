@@ -55,7 +55,7 @@
 				var th = $(this);
 				var dir = th.parent("ol").attr("id");
 				var page = th.attr("id");
-				var path = "Sub/"+dir+"/"+page;
+				var path = dir+"/"+page;
 				console.log(path);
 				$.ajax({url:path,
 						type:"get",
