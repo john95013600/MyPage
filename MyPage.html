@@ -29,12 +29,42 @@
 			height: 100%;
 			float: left;
 			background-color:#aaa;
-						text-align:center;
+			text-align:center;
+			position: relative;
+		}
+		#title-h1,#content-h1{
+			position: absolute;
+			left: 50px;
+			top: 20px;
+		}
+		#content-h1{
+			top: 120px;
 		}
 	</style>
 	<script>
 	$(function() {
 		var link = $("#ad");
+
+		$.ajax({
+			url: 'list.php',
+			type: 'get',
+			dataType: 'html',
+		}).done(function(data){
+			$("#left-bar").html(data);
+			$(".list-content").click(function(){
+				var th = $(this);
+				var dir = th.parent("ol").attr("id");
+				var page = th.attr("id");
+				var path = "Sub/"+dir+"/"+page;
+				console.log(path);
+				$.ajax({url:path,
+						type:"get",
+						dataType:"html",
+				}).done(function(data){
+					$("#content").html(data);
+				});
+			});
+		});
 		$("#btn_save").click(function(){
 			// console.log($("#text").val()+","+$("#text").html()+","+$("#text").text());
 			var blob = new Blob(["<h1>"+$("#text").val()+"</h1>"],{type:"application/octect-stream"});
@@ -47,22 +77,10 @@
 			console.log(file);
 
 			var url = URL.createObjectURL(file);
-			var tt = $("#text").val()+"<img src='"+url+"' style='width:600px; padding:5px 0px'>";
+			var tt = $("#text").val()+"<br><img src='"+url+"' style='width:600px; padding:5px 0px'>";
+			console.log(tt);
 			$("#text").val(tt);
 			$("#add").append("<img src='"+url+"' style='width:600px; padding:5px 0px'>");
-		});
-		$(".list-content").click(function(){
-			var th = $(this);
-			var dir = th.parent("ol").attr("id");
-			var page = th.attr("id");
-			var path = dir+"/"+page+".html";
-			console.log(path);
-			$.ajax({url:path,
-					type:"get",
-					dataType:"html",
-			}).done(function(data){
-				$("#content").html(data);
-			});
 		});
 
 	});
@@ -88,6 +106,9 @@
 
 	</div>
 	<div id="content">
+		<h1 id="title-h1">標題 :</h1>
+		<textarea cols="100" rows="3" id="title" style="margin:20px auto; overflow-x:hidden">標題...</textarea>
+		<h1 id="content-h1">內容 :</h1>
 		<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
 		<br>
 		<input id="btn_read" type="file" accept="image/*" value="read">
