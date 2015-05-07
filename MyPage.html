@@ -55,7 +55,7 @@
 				var th = $(this);
 				var dir = th.parent("ol").attr("id");
 				var page = th.attr("id");
-				var path = dir+"/"+page;
+				var path = dir?dir+"/"+page:page;
 				console.log(path);
 				$.ajax({url:path,
 						type:"get",
@@ -81,6 +81,19 @@
 			console.log(tt);
 			$("#text").val(tt);
 			$("#add").append("<img src='"+url+"' style='width:600px; padding:5px 0px'>");
+		});
+		$("#btn_create").click(function(){
+			var title = $("#title").val();
+
+			$.ajax({
+				url: 'create.php',
+				data:{filename:title},
+				type: 'POST',
+				dataType: 'html',
+				
+			}).done(function(data){
+				console.log(data);
+			});
 		});
 
 	});
@@ -112,6 +125,7 @@
 		<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
 		<br>
 		<input id="btn_read" type="file" accept="image/*" value="read">
+		<input id="btn_create" type="button" value="create">
 		<input id="btn_save" type="button" value="save">
 		<br>
 		<a id="ad"></a>	
