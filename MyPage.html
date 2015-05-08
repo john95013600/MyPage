@@ -55,7 +55,7 @@
 				var th = $(this);
 				var dir = th.parent("ol").attr("id");
 				var page = th.attr("id");
-				var path = dir?dir+"/"+page:page;
+				var path = dir?dir+"/"+page:"Sub/"+page;
 				console.log(path);
 				$.ajax({url:path,
 						type:"get",
@@ -74,26 +74,34 @@
 		});
 		$("#btn_read").change(function(e){
 			var file = e.target.files[0];
-			console.log(file);
+			// console.log(file);
 
 			var url = URL.createObjectURL(file);
-			var tt = $("#text").val()+"<br><img src='"+url+"' style='width:600px; padding:5px 0px'>";
+
+			var tt = $("#text").val()+'<br><img src="'+url+'" style="width:600px; padding:5px 0px">';
 			console.log(tt);
 			$("#text").val(tt);
 			$("#add").append("<img src='"+url+"' style='width:600px; padding:5px 0px'>");
 		});
 		$("#btn_create").click(function(){
 			var title = $("#title").val();
-
+			var content = $("#text").val();
+			console.log(content);
 			$.ajax({
 				url: 'create.php',
-				data:{filename:title},
+				data:{filename:title,content:content},
 				type: 'POST',
 				dataType: 'html',
 				
 			}).done(function(data){
 				console.log(data);
 			});
+		});
+		$("#url").click(function(){
+			var url = $("#url2").val();
+			console.log(url);
+			var tt = $("#text").val()+'<br><img src="'+url+'" style="width:600px; padding:5px 0px">';
+			$("#text").val(tt);
 		});
 
 	});
@@ -124,9 +132,12 @@
 		<h1 id="content-h1">內容 :</h1>
 		<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
 		<br>
-		<input id="btn_read" type="file" accept="image/*" value="read">
-		<input id="btn_create" type="button" value="create">
-		<input id="btn_save" type="button" value="save">
+		<input id="btn_read" type="file" accept="image/*" value="上傳圖片">
+		<input id="btn_create" type="button" value="新增">
+		<!-- <input id="btn_save" type="button" value="另存"> -->
+		<br>
+		<input type="text" width="100" id="url2">
+		<input type="button" value="相片網址" id="url">
 		<br>
 		<a id="ad"></a>	
 		<div id="add" style="width:620px;"></div>
