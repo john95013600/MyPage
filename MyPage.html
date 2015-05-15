@@ -9,6 +9,8 @@
 		*{
 			margin: 0px;
 			padding: 0px;
+			list-style-type: none;
+			font-family: Open Sans, Microsoft JhengHei, Arial, serif;
 		}
 		body,html{
 			height: 100%;
@@ -16,21 +18,28 @@
 		#top-bar{
 			width: 100%;
 			height: 150px;
-			background-color: #F9026B;
+			background-color: #4347FE;
+			text-align: center;
+			font-weight: bolder;
+		}
+		#left-bar, #content{
+			
 		}
 		#left-bar{
-			width: 20%;
 			height: 100%;
+			width: 20%;
 			float: left;
-			background-color:#8D917D;
+			background-color:#666;
 		}
 		#content{
-			width: 80%;
 			height: 100%;
+			width: 80%;
 			float: left;
 			background-color:#aaa;
 			text-align:center;
 			position: relative;
+			overflow-x: hidden;
+			overflow-y: scroll;
 		}
 		#title-h1,#content-h1{
 			position: absolute;
@@ -39,6 +48,38 @@
 		}
 		#content-h1{
 			top: 120px;
+		}
+		.list-dir{
+			position: relative;
+			left:15px;	
+			margin-top: 5px;
+			margin-bottom: 10px;
+			font-size: 18px;
+			font-weight: bolder;
+			color: #FFF;
+		}
+		.list-content{
+			position: relative;
+			left:10px;	
+			margin-top: 5px;
+			font-size: 15px;
+			color: #A8AA9B;
+		}
+		.left-list{
+			margin-top: 10px;
+		}
+		.active{
+			color: #FFF;
+			text-decoration: underline;
+		}
+		.top-row{
+			position: relative;
+  			top: 120px;
+			float: left;
+			box-sizing: border-box;
+			border-style: solid; border-color: #fff;
+			width: 25%;
+			height: 30px;
 		}
 	</style>
 	<script>
@@ -56,15 +97,29 @@
 				var dir = th.parent("ol").attr("id");
 				var page = th.attr("id");
 				var path = dir?dir+"/"+page:"Sub/"+page;
+				$(".list-content").removeClass("active");
+				th.addClass("active");
 				console.log(path);
 				$.ajax({url:path,
 						type:"get",
 						dataType:"html",
 				}).done(function(data){
-					$("#content").html(data);
+					$("#content-1").html(data+"<div><h3 class='edit' style='border-style: solid; border-color: red; width:50px; position:absolute; top: 10px; right:50px;'>Edit</h3></div>");
+					$("#content-1").attr({"path":path}); //到時候需要編輯時可以用path的路徑開啟檔案
+					$(".edit").click(function(){
+						$("#content-1").css("display","none");
+						$("#content-2").css("display","initial").append("<div><h3 class='edit' style='border-style: solid; border-color: red; width:60px; position:absolute; top: 10px; right:50px;'>Finish</h3></div>");
+						
+					});
 				});
+
 			});
+			$('.list-content:eq(0)').click();
+
 		});
+
+
+
 		$("#btn_save").click(function(){
 			// console.log($("#text").val()+","+$("#text").html()+","+$("#text").text());
 			var blob = new Blob(["<h1>"+$("#text").val()+"</h1>"],{type:"application/octect-stream"});
@@ -99,7 +154,7 @@
 		});
 		$("#url").click(function(){
 			var url = $("#url2").val();
-			console.log(url);
+			// console.log(url);
 			var tt = $("#text").val()+'<br><img src="'+url+'" style="width:600px; padding:5px 0px">';
 			$("#text").val(tt);
 		});
@@ -109,7 +164,15 @@
 	
 </head>
 <body>
-	<div id="top-bar"><h1>MyPages</h1></div>
+	<div id="top-bar">
+		<div class="top-row">Set Clock</div>
+		<div class="top-row">Write Diary</div>
+		<div class="top-row">Photos</div>
+		<div class="top-row">Login</div>
+		<h1>☀對我來說  妳是最耀眼的太陽☀
+		</h1>
+		
+	</div>
 	<div id="left-bar">
 		<ul>
 			<li class="list-dir">Home-Page
@@ -127,20 +190,22 @@
 
 	</div>
 	<div id="content">
-		<h1 id="title-h1">標題 :</h1>
-		<textarea cols="100" rows="3" id="title" style="margin:20px auto; overflow-x:hidden">標題...</textarea>
-		<h1 id="content-h1">內容 :</h1>
-		<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
-		<br>
-		<input id="btn_read" type="file" accept="image/*" value="上傳圖片">
-		<input id="btn_create" type="button" value="新增">
-		<!-- <input id="btn_save" type="button" value="另存"> -->
-		<br>
-		<input type="text" width="100" id="url2">
-		<input type="button" value="相片網址" id="url">
-		<br>
-		<a id="ad"></a>	
-		<div id="add" style="width:620px;"></div>
+		<div id="content-1"></div>
+		<div id="content-2" style="display:none">
+			<h1 id="title-h1">標題 :</h1>
+			<textarea cols="100" rows="3" id="title" style="margin:20px auto; overflow-x:hidden">標題...</textarea>
+			<h1 id="content-h1">內容 :</h1>
+			<textarea cols="100" id="text" style="height:300px; margin:20px auto; overflow-x:hidden">打點東西吧...</textarea>
+			<br>
+			<input id="btn_read" type="file" accept="image/*" value="上傳圖片">
+			<input id="btn_create" type="button" value="新增">
+			<br>
+			<input type="text" width="100" id="url2">
+			<input type="button" value="相片網址" id="url">
+			<br>
+			<a id="ad"></a>	
+			<div id="add" style="width:620px;"></div>
+		</div>
 	</div>
 </body>
 </html>
